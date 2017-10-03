@@ -3,6 +3,7 @@
 import urllib
 import urllib2
 import re
+from bs4 import BeautifulSoup
 
 page = 1
 url = 'http://www.qiushibaike.com/hot/page/' + str(page)
@@ -11,11 +12,18 @@ headers = { 'User-Agent' : user_agent }
 try:
     request = urllib2.Request(url,headers = headers)
     response = urllib2.urlopen(request)
-    content = response.read().decode('utf-8')
-    pattern = re.compile('<div.*?author clearfix">.*?<a.*?<img.*?alt="(.*?)"</a><a fref="*?',re.S)
-    items = re.findall(pattern,content)
-    for item in items:
-        print item[0]
+    content = response.read()
+    soup = BeautifulSoup(content,"lxml")
+    for link in soup.find_all('img'):
+        name=link.get('alt')
+        if name:
+            print(name)
+    print('xxx')
+    for link in soup.find_all('div'):
+        name=link.get('alt')
+        if name:
+            print(name)
+
 
 
 
